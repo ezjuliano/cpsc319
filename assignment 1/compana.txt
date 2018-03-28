@@ -1,0 +1,84 @@
+/*
+
+*/
+/*
+converted format of mergeSort and merge
+NOTE: Accessing an array element is 1 op.
+NOTE: 'n' is last which is also data.length
+NOTE: first = 0
+	TASK													NUMBER OF OPERATIONS
+if(first<last){													1 op
+int mid = (first+last)/2;										1 op
+mergeSort(first, mid);											1 op
+mergeSort(mid+1, last);											1 op		
+merge(first, mid, last);										1 op
+*** merge ***
+int i = first;													1 op
+while(i<=last){													n+1		ops
+	tempArr[i] = data[i];										3(n+1)	ops
+	i++;														n+1		ops
+}
+int leftSubIndex = first;										1 op
+int rightSubIndex = mid+1;										1 op
+int dataIndex = first;											1 op
+while(leftSubIndex<=mid && rightSubIndex<=last){				3[(n+1)/2]		ops*
+	if(tempArr[leftSubIndex] <= tempArr[rightSubIndex]){		3([(n+1)/2]-1)	ops
+		data[dataIndex] = tempArr[leftSubIndex];				3([(n+1)/2]-1)	ops
+		leftSubIndex++;											[(n+1)/2]-1		ops
+	}else{
+		data[dataIndex] = tempArr[rightSubIndex];				3([(n+1)/2]-1)	ops**
+		rightSubIndex++;										[(n+1)/2]-1		ops**
+	}
+	dataIndex++;												[(n+1)/2]-1		ops
+}
+while(leftSubIndex<=mid){										C 	ops***
+	data[dataIndex] = tempArr[leftSubIndex];					C-1 ops***
+	dataIndex++;												C-1 ops***
+	leftSubIndex++;												C-1 ops***
+}
+															------------------------------
+																(19/2)(n+1) + Constant
+Even though the complexity is just O(n), we need to know that the number of different partitions
+is proportional to the log(n). This is due to the recursive method call. Using the product rule
+this will give us O(n log n).
+* assuming that even sub-arrays are always created then it should only take half the total time
+** will not be considered since both cases A) when 'if' is true and B) when 'else' is true produce
+	the same number of operations
+*** these instructions will always be less than 'n' ops and will just be a constant 'C' because that
+	is just to take care of the leftovers
+*/
+
+/*
+converted format of quickSort
+NOTE: Accessing an array element is 1 op.
+NOTE: 'n' is last which is also data.length
+	TASK								NUMBER OF OPERATIONS
+int first = lo;								1	op
+int last = hi;								1	op
+int temp;
+int pivot = data[(lo+hi)/2];				2	op
+while(first<=last){							n+1	ops
+	while(data[first]<pivot){				(n+1)/2		ops*
+		first++;							[(n+1)/2]-1	ops*
+	}
+	while(data[last]>pivot){				(n+1)/2		ops*
+		last--;								[(n+1)/2]-1	ops*
+	}
+	if(first<=last){						1	op
+		temp = data[first];					2	ops
+		data[first] = data[last];			3	ops
+		data[last] = temp;					2	ops
+		first++;							1	op
+		last--;								1	op
+	}
+}
+if(lo < last)								1	op
+	quickSort(lo, last);					1	op
+if(first < hi)								1	op
+	quickSort(first, hi);					1	op
+										---------------------
+											3n + 19 ops
+Similar to merge sort, quick sort gain log n proportionality due to its recursive method calls.
+Using the product rule this will result into a O(n log n)
+* assuming that even sub-arrays are always created then it should only take half the total time
+*/

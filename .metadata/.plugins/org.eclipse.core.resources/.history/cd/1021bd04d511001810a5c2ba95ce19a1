@@ -1,0 +1,137 @@
+import java.io.*;
+import java.util.Scanner;
+import java.util.Arrays;
+
+public class Anagram {
+	/*
+	 * User defined list to contain scanned words from a text file
+	 */
+	CustomList wordList;
+	/*
+	 * User defined list to contain anagram matrix
+	 */
+	CustomList[] wordMat;
+	/*
+	 * File name of the input text file
+	 */
+	String fileIN;
+	/*
+	 * File name of the output text file
+	 */
+	String fileOUT;
+	/*
+	 * Time measurement fields
+	 */
+	double start, stop, totalStart, totalStop;
+	PrintWriter cursor;
+	/*
+	 * Input size and storage array size
+	 */
+	int arraySize;
+	/*
+	 * Constructs an object of type anagram
+	 */
+	public Anagram() {
+		wordList = new CustomList();
+	}
+	/*
+	 * Read input text file and store into custom list
+	 */
+	public void readInputFile() throws IOException{
+		BufferedReader buffer = new BufferedReader(new FileReader(fileIN));
+		String data;
+		arraySize = 0;
+		// scans the input file by checking if the next characters is an EOL
+		while((data = buffer.readLine()) != null) {
+			
+			if(arraySize == 0) {
+				wordMat = new CustomList[500000];
+			}
+			else if(wordMat[arraySize] == null) {
+				CustomList[] temp = new CustomList[arraySize*2];
+				for(int i = 0; i<arraySize; i++)
+					temp[i] = wordMat[i];
+				wordMat = temp;
+			}
+			
+			if(!isAnagram(data)) {
+				wordMat[arraySize] = new CustomList(data);
+				arraySize++;
+			}
+		}
+		buffer.close();
+	}
+	
+	public boolean isAnagram(String text) {
+		char[] inputAsChar = text.toCharArray();
+		SortFuncs.charSort(inputAsChar);
+		// String inputText = inputAsChar.toString();
+		for(int i = 0; i<arraySize; i++) {
+			char[] currentAsChar = wordMat[i].getHead().data.toCharArray();
+			SortFuncs.charSort(currentAsChar);
+			// String currentText = currentAsChar.toString();
+			if(Arrays.equals(inputAsChar, currentAsChar)) {
+				wordMat[i].addFront(text);
+				return true;
+			}
+		}
+		return false;
+	}
+	/*
+	 * Prints the output to a file
+	 */
+	public void printToFile() {
+		try {
+			cursor = new PrintWriter(fileOUT);
+			cursor.print("This is the sorted list of anagrams.\n");
+			// goes through all the pointers
+			for(int i = 0; wordMat[i] != null; i++) {
+				// goes through all the contents within pointer[i]
+				for(int j = 0; j < wordMat[i].size(); j++) {
+					// prints to file
+					cursor.print(wordMat[i].getData(j) + " ");
+				}
+				cursor.println();
+			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			System.out.println("File does not exist.");
+		}
+	}
+	
+	public static void main(String[] args) throws IOException {
+		Anagram sample = new Anagram();
+		
+		// store file name arguments
+		sample.fileIN	= args[0];
+		sample.fileOUT	= args[1];
+		
+		sample.totalStart = System.nanoTime();
+		System.out.println("The program has started.");
+		
+		sample.start = System.nanoTime();
+		sample.readInputFile();
+		sample.stop = System.nanoTime();
+		
+		sample.cursor.print("Reading the input file that contains "+sample.arraySize+" words took "+(sample.stop-sample.start)/1000000000.0+" seconds.\n");
+		
+		// sort the input file in alphabetical order
+		sample.wordList.sort();
+		// create an array of pointer to object type CustomList
+		sample.wordMat = new CustomList[sample.wordList.size()];
+		// fill in the "matrix" of anagrams
+		sample.anagramMat();
+		// print the output to file
+		sample.printToFile();
+		
+		System.out.println("The program has ended.");
+		sample.totalStop = System.nanoTime();
+		
+		sample.cursor.print("Sorting the input file that contains "+sample.arraySize+" words took "+(sample.totalStop-sample.totalStart)/1000000000.0+" seconds.\n");
+		sample.cursor.println("The program has ended.");
+		sample.cursor.close();
+		
+		System.out.print("Sorting the input file that contains "+sample.arraySize+" words took "+(sample.totalStop-sample.totalStart)/1000000000.0+" seconds.\n");
+	}
+}

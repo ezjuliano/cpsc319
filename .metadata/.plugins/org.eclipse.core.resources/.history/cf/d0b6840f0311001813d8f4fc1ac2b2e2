@@ -1,0 +1,160 @@
+
+public class CustomList {
+	/*
+	 * Defines the contents of each element of the array
+	 */
+	public class Node{
+		String data;
+		Node next = null;
+	}
+	/*
+	 * Head pointer
+	 */
+	private Node head;
+	/*
+	 * Size of the list
+	 */
+	private int size;
+	/*
+	 * Constructor
+	 */
+	public CustomList() {
+		head = null;
+		size = 0;
+	}
+	/*
+	 * Returns the size of the list
+	 */
+	public int size() {return size;}
+	/*
+	 * Adds a node at the end of the list with some data and
+	 * increases the size by 1.
+	 * @param text specifies the data inside the node
+	 */
+	public void addEnd(String text) {
+		Node temp = new Node();
+		temp.data = text;
+		if(head == null) {
+			temp.next = head;
+			head = temp;
+		}
+		else {
+			Node node = head;
+			while(node.next!=null) {
+				node = node.next;
+			}
+			node.next = temp;
+			temp.next = null;
+		}
+		size++;
+	}
+	/*
+	 * Adds a node in the beginning of the list and increases
+	 * size by 1.
+	 * @param text specifies data inside the node
+	 */
+	public void addFront(String text) {
+		Node temp = new Node();
+		temp.data = text;
+		temp.next = head;
+		head = temp;
+		size++;
+	}
+	/*
+	 * Adds a node that has some text at the nth location of
+	 * the list and increases the size by 1.
+	 * @param text specifies the data in the node
+	 * @param n specifies the location within the list
+	 */
+	public void insert(String text, int n) {
+		if((n < 0)||(n > size)) return;
+		else if(n==0) 		addFront(text);
+		else if(n==size) 	addEnd(text);
+		else {
+			Node temp = new Node();
+			temp.data = text;
+			Node pred = head;
+			Node succ = head.next;
+			for(int index = 1; index<n; index++) {
+				pred = succ;
+				succ = succ.next;
+			}
+			temp.next = succ;
+			pred.next = temp;
+			size++;
+		}
+	}
+	/*
+	 * Deletes a node at the nth location and decrements size by 1
+	 * @param n specifies the location to be deleted
+	 */
+	public void delete(int n) {
+		if((head==null)||(n<0)||(n>=size)) return;
+		Node pred, loc;
+		if(n==0) {
+			loc = head;
+			head = head.next;
+		}
+		else {
+			pred = head;
+			loc = head.next;
+			for(int index = 1; index<n; index++) {
+				pred = loc;
+				loc = loc.next;
+			}
+			pred.next = loc.next;
+		}
+		loc = null;
+		size--;
+	}
+	/*
+	 * Retrieves the data of the node in the nth location
+	 * @param n specifies the location of the node
+	 */
+	public String getData(int n) {
+		if((n<0)||(n>=size)) {
+			System.err.println("Invalid access. Program will now exit");
+			System.exit(0);
+		}
+		Node temp = head;
+		for(int index = 0; index<n; index++)
+			temp = temp.next;
+		return temp.data;
+	}
+	/*
+	 * Changes the data within the nth node to text
+	 * @param text the new data
+	 * @param n the position of the node
+	 */
+	public void set(String text, int n) {
+		if((n<0)||(n>=size)) {
+			System.err.println("Invalid index. Program will now exit.");
+			System.exit(0);
+		}
+		Node temp = head;
+		for(int index = 0; index<n; index++)
+			temp = temp.next;
+		temp.data = text;
+	}
+	/*
+	 * Sorts the contents of the list in ascending order
+	 */
+	public void sort() {
+		for(int i=1, j; i<size(); i++){
+			String temp = getData(i);
+			for(j=i; (j>0)&&((temp.compareTo(getData(j-1)))<0); j--){
+				String tmp = getData(j-1);
+				set(tmp,j);
+			}
+			set(temp,j);
+		}
+	}
+	/*
+	 * Prints the contents of the custom list onto the console
+	 */
+	public void print() {
+		for(int index = 0; index<this.size(); index++)
+			System.out.println(this.getData(index));
+		System.out.println();
+	}
+}

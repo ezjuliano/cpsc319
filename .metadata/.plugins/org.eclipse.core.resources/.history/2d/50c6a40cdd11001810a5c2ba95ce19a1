@@ -1,0 +1,80 @@
+
+public class CustomList implements Cloneable{
+	/*
+	 * Defines the contents of each element of the array
+	 */
+	public class Node{
+		String data;
+		Node next = null;	
+	}
+	/*
+	 * Head pointer
+	 */
+	private Node head;
+	/*
+	 * Size of the list
+	 */
+	private int size;
+	/*
+	 * Constructors
+	 */
+	public CustomList() {
+		head = null;
+		size = 0;
+	}
+	public CustomList(String text) {
+		addFront(text);
+	}
+	public CustomList clone() throws CloneNotSupportedException{
+		
+	}
+	/*
+	 * Returns the size of the list
+	 */
+	public int size() {return size;}
+	/*
+	 * Returns the head pointer
+	 */
+	public Node getHead() {return head;}
+	/*
+	 * Adds a node in the beginning of the list and increases
+	 * size by 1.
+	 * @param text specifies data inside the node
+	 */
+	public void addFront(String text) {
+		Node temp = new Node();
+		temp.data = text;
+		temp.next = head;
+		head = temp;
+		size++;
+	}
+	/*
+	 * Retrieves the data of the node in the nth location
+	 * @param n specifies the location of the node
+	 */
+	public String getData(int n) {
+		if((n<0)||(n>=size)) {
+			System.err.println("Invalid access. Program will now exit");
+			System.exit(0);
+		}
+		Node temp = head;
+		for(int index = 0; index<n; index++)
+			temp = temp.next;
+		return temp.data;
+	}
+	/*
+	 * Changes the data within the nth node to text
+	 * @param text the new data
+	 * @param n the position of the node
+	 */
+	public void set(String text, int n) {
+		if((n<0)||(n>=size)) {
+			System.err.println("Invalid index. Program will now exit.");
+			System.exit(0);
+		}
+		Node temp = head;
+		for(int index = 0; index<n; index++)
+			temp = temp.next;
+		temp.data = text;
+	}
+}

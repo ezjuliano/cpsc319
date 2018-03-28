@@ -1,0 +1,60 @@
+public class SortFuncs {
+	/*
+	 * This is a modified implementation of insertion sort enabled
+	 * to sort chars instead of integers
+	 * @param in array to be sorted
+	 */
+	public static void charSort(char[] in) {
+		for(int i = 1,j; i<in.length; i++) {
+			char temp = in[i];
+			for(j = i; (j>0)&&(temp<in[j-1]); j--)
+				in[j] = in[j-1];
+			in[j] = temp;
+		}
+	}
+	/*
+	 * Sorts the contents of the list in ascending order
+	 */
+	public static void insertionSort(CustomList in) {
+		for(int i=1, j; i<in.size(); i++){
+			String temp = in.getData(i);
+			for(j=i; (j>0)&&((temp.compareTo(in.getData(j-1)))<0); j--){
+				String tmp = in.getData(j-1);
+				in.set(tmp,j);
+			}
+			in.set(temp,j);
+		}
+	}
+	/*
+	 * Sort the first elements in ascending order
+	 */
+	public static void quickSort(int lo, int hi, CustomList[] in) {
+		int first = lo, last = hi, temp;
+		// set a pivot element
+		int pivot = in[(lo+hi)/2];
+		// divide arrays
+		while(first<=last){
+			// identify a number greater than pivot value from left subarray
+			while(in[first]<pivot){
+				first++;
+			}
+			// identify a number less than pivot value from right subarray
+			while(in[last]>pivot){
+				last--;
+			}
+			// swap
+			if(first<=last){
+				temp = in[first];
+				in[first] = in[last];
+				in[last] = temp;
+				first++;
+				last--;
+			}
+		}
+		// recursive method call
+		if(lo < last)
+			quickSort(lo, last);
+		if(first < hi)
+			quickSort(first, hi);
+	}
+}
