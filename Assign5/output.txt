@@ -1,0 +1,4 @@
+Longest search duration took:	11140 reads.
+The average number of reads per second is:	1969.8663610719323 reads.
+The load factor is:	0.9993833142454409
+The hashing efficiency:	0.05
